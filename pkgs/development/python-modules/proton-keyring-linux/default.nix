@@ -6,6 +6,7 @@
   keyring,
   proton-core,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -29,17 +30,19 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace setup.cfg \
-      --replace "--cov=proton.keyring_linux.core --cov-report html --cov-report term" ""
+      --replace-fail "--cov=proton.keyring_linux.core --cov-report html --cov-report term" ""
   '';
 
   pythonImportsCheck = [ "proton.keyring_linux.core" ];
 
   nativeCheckInputs = [ pytestCheckHook ];
 
-  meta = with lib; {
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
     description = "ProtonVPN core component to access Linux's keyring";
     homepage = "https://github.com/ProtonVPN/python-proton-keyring-linux";
-    license = licenses.gpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

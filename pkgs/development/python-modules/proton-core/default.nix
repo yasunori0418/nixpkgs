@@ -9,18 +9,20 @@
   python-gnupg,
   requests,
   pytestCheckHook,
+  nix-update-script,
+  pyotp,
 }:
 
 buildPythonPackage rec {
   pname = "proton-core";
-  version = "0.1.16";
+  version = "0.2.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "ProtonVPN";
     repo = "python-proton-core";
     rev = "refs/tags/v${version}";
-    hash = "sha256-072XuHvgWludlFwp/tqLpuAU89vzifFhwQ01FuiCoL8=";
+    hash = "sha256-IiKmtgcCSe2q3qaNuUSaC/D/vSQzVq7w8VN2Xq81+tQ=";
   };
 
   nativeBuildInputs = [ setuptools ];
@@ -35,12 +37,15 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace setup.cfg \
-      --replace "--cov=proton --cov-report html --cov-report term" ""
+      --replace-fail "--cov=proton --cov-report html --cov-report term" ""
   '';
 
   pythonImportsCheck = [ "proton" ];
 
-  nativeCheckInputs = [ pytestCheckHook ];
+  nativeCheckInputs = [
+    pytestCheckHook
+    pyotp
+  ];
 
   disabledTestPaths = [
     # Single test, requires internet connection
@@ -64,10 +69,12 @@ buildPythonPackage rec {
     "test_bad_pinning_url_changed"
   ];
 
+  passthru.updateScript = nix-update-script { };
+
   meta = {
     description = "Core logic used by the other Proton components";
     homepage = "https://github.com/ProtonVPN/python-proton-core";
     license = lib.licenses.gpl3Only;
-    maintainers = [ ];
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

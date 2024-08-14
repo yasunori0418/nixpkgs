@@ -8,6 +8,7 @@
   proton-vpn-logger,
   jinja2,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -59,10 +60,12 @@ buildPythonPackage rec {
     "test_ovpnconfig_with_malformed_server_and_credentials"
   ];
 
-  meta = with lib; {
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
     description = "Defines the interface that VPN connection backends should implement";
     homepage = "https://github.com/ProtonVPN/python-proton-vpn-connection";
-    license = licenses.gpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

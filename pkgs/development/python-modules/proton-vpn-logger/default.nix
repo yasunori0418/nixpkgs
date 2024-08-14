@@ -5,6 +5,7 @@
   setuptools,
   proton-core,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -37,10 +38,12 @@ buildPythonPackage rec {
     export HOME=$(mktemp -d)
   '';
 
-  meta = with lib; {
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
     description = "General purpose logging package for the entire ProtonVPN Linux client";
     homepage = "https://github.com/ProtonVPN/python-proton-vpn-logger";
-    license = licenses.gpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

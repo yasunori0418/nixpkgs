@@ -5,6 +5,7 @@
   setuptools,
   proton-core,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -25,17 +26,19 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace setup.cfg \
-      --replace "--cov=proton --cov-report=html --cov-report=term" ""
+      --replace-fail "--cov=proton --cov-report=html --cov-report=term" ""
   '';
 
   pythonImportsCheck = [ "proton.vpn.killswitch.interface" ];
 
   nativeCheckInputs = [ pytestCheckHook ];
 
-  meta = with lib; {
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
     description = "Defines the ProtonVPN kill switch interface";
     homepage = "https://github.com/ProtonVPN/python-proton-vpn-killswitch";
-    license = licenses.gpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

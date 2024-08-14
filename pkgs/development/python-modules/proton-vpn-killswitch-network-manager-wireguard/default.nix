@@ -11,19 +11,20 @@
   pycairo,
   pygobject3,
   pytestCheckHook,
+  iproute2,
   nix-update-script,
 }:
 
 buildPythonPackage rec {
-  pname = "proton-vpn-killswitch-network-manager";
-  version = "0.5.0";
+  pname = "proton-vpn-killswitch-network-manager-wireguard";
+  version = "0.1.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "ProtonVPN";
-    repo = "python-proton-vpn-killswitch-network-manager";
-    rev = "refs/tags/v${version}";
-    hash = "sha256-KEwltKs/scTPugELfQVDt+JkXyjdxUhwRlfzyAzucJA=";
+    repo = "python-proton-vpn-killswitch-network-manager-wireguard";
+    rev = "v${version}";
+    hash = "sha256-Ftqab+OVh7rK9l1A3KmP7gXLztiCaayB16cmqTTou4g=";
   };
 
   nativeBuildInputs = [
@@ -44,18 +45,21 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace setup.cfg \
-      --replace-fail "--cov=proton.vpn.killswitch.backend.linux.networkmanager --cov-report=html --cov-report=term" ""
+      --replace "--cov=proton.vpn.killswitch.backend.linux.wireguard --cov-report=html --cov-report=term" ""
+
+    substituteInPlace proton/vpn/killswitch/backend/linux/wireguard/killswitch_connection_handler.py \
+      --replace '/usr/sbin/ip' '${iproute2}/bin/ip'
   '';
 
-  pythonImportsCheck = [ "proton.vpn.killswitch.backend.linux.networkmanager" ];
+  pythonImportsCheck = [ "proton.vpn.killswitch.backend.linux.wireguard" ];
 
   nativeCheckInputs = [ pytestCheckHook ];
 
   passthru.updateScript = nix-update-script { };
 
   meta = {
-    description = "Implementation of the proton-vpn-killswitch interface using Network Manager";
-    homepage = "https://github.com/ProtonVPN/python-proton-vpn-killswitch-network-manager";
+    description = "Implementation of the proton-vpn-killswitch interface using Network Manager with wireguard-protocol";
+    homepage = "https://github.com/ProtonVPN/proton-vpn-killswitch-network-manager-wireguard";
     license = lib.licenses.gpl3Only;
     maintainers = with lib.maintainers; [ sebtm ];
   };

@@ -6,23 +6,25 @@
   setuptools,
   networkmanager,
   proton-core,
+  proton-vpn-api-core,
   proton-vpn-connection,
   pycairo,
   pygobject3,
   pytest-asyncio,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
   pname = "proton-vpn-network-manager";
-  version = "0.4.2";
+  version = "0.5.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "ProtonVPN";
     repo = "python-proton-vpn-network-manager";
     rev = "refs/tags/v${version}";
-    hash = "sha256-zw6fzay1zCBIrouDg2EMhaxDLKIYV5TKYK5lQ3v8W6o=";
+    hash = "sha256-hTJE9sUjPMsE9d0fIA/OhoasumtfsWuFwn0aTm10PN4=";
   };
 
   nativeBuildInputs = [
@@ -35,6 +37,7 @@ buildPythonPackage rec {
     # Needed here for the NM namespace
     networkmanager
     proton-core
+    proton-vpn-api-core
     proton-vpn-connection
     pycairo
     pygobject3
@@ -52,10 +55,12 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
-  meta = with lib; {
+  passthru.updateScript = nix-update-script { };
+
+  meta = {
     description = "Provides the necessary functionality for other ProtonVPN components to interact with NetworkManager";
     homepage = "https://github.com/ProtonVPN/python-proton-vpn-network-manager";
-    license = licenses.gpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }

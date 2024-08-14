@@ -13,6 +13,7 @@
   pytest-asyncio,
   requests,
   pytestCheckHook,
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -57,10 +58,12 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
+  passthru.updateScript = nix-update-script { };
+
   meta = {
     description = "Provides utility classes to manage VPN sessions";
     homepage = "https://github.com/ProtonVPN/python-proton-vpn-session";
     license = lib.licenses.gpl3Only;
-    maintainers = [ ];
+    maintainers = with lib.maintainers; [ sebtm ];
   };
 }
