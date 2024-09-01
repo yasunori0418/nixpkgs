@@ -12,7 +12,10 @@
   pyjwt,
   pytestCheckHook,
   python-dateutil,
+  python-socketio,
   pythonOlder,
+  pytest-asyncio,
+  pytest-cov-stub,
   requests-mock,
   requests,
   typing-extensions,
@@ -20,7 +23,7 @@
 
 buildPythonPackage rec {
   pname = "yalexs";
-  version = "8.4.1";
+  version = "8.5.5";
   pyproject = true;
 
   disabled = pythonOlder "3.9";
@@ -29,15 +32,12 @@ buildPythonPackage rec {
     owner = "bdraco";
     repo = "yalexs";
     rev = "refs/tags/v${version}";
-    hash = "sha256-2n/+3VkKtwNlDgxoraIrx/ZUZ9TydybWIkLDTdbMd1w=";
+    hash = "sha256-uDlyFnFMJLGcVtnw4sMKSDW/t6Le4OToJJh+I3p1jOU=";
   };
 
-  postPatch = ''
-    substituteInPlace pyproject.toml \
-      --replace-fail "-v -Wdefault --cov=yalexs --cov-report=term-missing:skip-covered" ""
-  '';
-
   build-system = [ poetry-core ];
+
+  pythonRelaxDeps = [ "aiohttp" ];
 
   dependencies = [
     aiofiles
@@ -46,17 +46,17 @@ buildPythonPackage rec {
     freenub
     pyjwt
     python-dateutil
+    python-socketio
     requests
     typing-extensions
-  ];
-
-  # aiounittest is not supported on 3.12
-  doCheck = pythonOlder "3.12";
+  ] ++ python-socketio.optional-dependencies.asyncio_client;
 
   nativeCheckInputs = [
     aioresponses
     aiounittest
     pytestCheckHook
+    pytest-asyncio
+    pytest-cov-stub
     requests-mock
   ];
 
