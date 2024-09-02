@@ -129,26 +129,6 @@ let
         ];
       });
 
-      intellifire4py = super.intellifire4py.overridePythonAttrs (oldAttrs: rec {
-        version = "2.2.2";
-        src = fetchFromGitHub {
-          owner = "jeeftor";
-          repo = "intellifire4py";
-          rev = "refs/tags/${version}";
-          hash = "sha256-iqlKfpnETLqQwy5sNcK2x/TgmuN2hCfYoHEFK2WWVXI=";
-        };
-        nativeBuildInputs = with self; [
-          setuptools
-        ];
-        propagatedBuildInputs = with self; [
-          aenum
-          aiohttp
-          pydantic
-          requests
-        ];
-        doCheck = false; # requires asynctest, which does not work on python 3.11
-      });
-
       openhomedevice = super.openhomedevice.overridePythonAttrs (oldAttrs: rec {
         version = "2.2";
         src = fetchFromGitHub {
@@ -434,7 +414,7 @@ let
   extraBuildInputs = extraPackages python.pkgs;
 
   # Don't forget to run update-component-packages.py after updating
-  hassVersion = "2024.9.0b2";
+  hassVersion = "2024.9.0b3";
 
 in python.pkgs.buildPythonApplication rec {
   pname = "homeassistant";
@@ -452,13 +432,13 @@ in python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     rev = "refs/tags/${version}";
-    hash = "sha256-bb4zKTJfp9IGfLdln7Gf7QXADH96pOc81KvrJG62JLA=";
+    hash = "sha256-pw9Y9IKkbTFSqNryNKPrUlwpxs9uAVn+33dQLpruGAE=";
   };
 
   # Secondary source is pypi sdist for translations
   sdist = fetchPypi {
     inherit pname version;
-    hash = "sha256-HF3PGpN91CrHWez2KcLMo5miDvplXLVpZe+63mz3O/g=";
+    hash = "sha256-JuTK/1KcIPb8WC6oeGoK/vxNFWJdzyvdMc6RoefwYb0=";
   };
 
   build-system = with python.pkgs; [
@@ -483,6 +463,7 @@ in python.pkgs.buildPythonApplication rec {
     "sqlalchemy"
     "typing-extensions"
     "urllib3"
+    "yarl"
   ];
 
   # extract translations from pypi sdist

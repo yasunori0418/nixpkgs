@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2024.9.0b2";
+  version = "2024.9.0b3";
   components = {
     "3_day_blinds" = ps: with ps; [
     ];
@@ -3840,6 +3840,9 @@
     "sinch" = ps: with ps; [
     ]; # missing inputs: clx-sdk-xms
     "siren" = ps: with ps; [
+    ];
+    "sisyphus" = ps: with ps; [
+      sisyphus-control
     ];
     "sky_hub" = ps: with ps; [
       pyskyqhub
