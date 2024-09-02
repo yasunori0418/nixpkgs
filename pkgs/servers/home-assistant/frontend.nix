@@ -4,7 +4,7 @@ buildPythonPackage rec {
   # the frontend version corresponding to a specific home-assistant version can be found here
   # https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/frontend/manifest.json
   pname = "home-assistant-frontend";
-  version = "20240829.0";
+  version = "20240902.0";
   format = "wheel";
 
   src = fetchPypi {
@@ -12,7 +12,7 @@ buildPythonPackage rec {
     pname = "home_assistant_frontend";
     dist = "py3";
     python = "py3";
-    hash = "sha256-Yu1f8RaBEkeAp0DugMYhm9O8xHkQlPOBLLBZ/sGzgOM=";
+    hash = "sha256-Y7aTNKM3b2MH0onSoICIoVaK27tDhrHAN+48IOe+7rs=";
   };
 
   # there is nothing to strip in this package
